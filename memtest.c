@@ -8,6 +8,7 @@
 #include "types.h"
 #include "bios.h"
 #include "output.h"
+#include "utils.h"
 
 /**********************************************************/
 
