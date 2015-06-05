@@ -1,7 +1,7 @@
 SRC = configure.c
 CC = gcc
 AS = as
-CFLAGS = -Wall --std=c99 -m 16
+CFLAGS = -Wall --std=c99 -m16
 
 
 all:		install

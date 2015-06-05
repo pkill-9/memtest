@@ -11,6 +11,8 @@
 #ifndef _MEMTEST_OUTPUT_H
 #define _MEMTEST_OUTPUT_H
 
+#include <stdint.h>
+
 /**********************************************************/
 
 void print_string (const char *string);

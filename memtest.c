@@ -13,6 +13,8 @@
 /**********************************************************/
 
 PRIVATE void print_descriptor (struct memory_region *descriptor);
+PRIVATE void print_header (void);
+PRIVATE void print_footer (void);
 
 /**********************************************************/
 
@@ -42,7 +44,7 @@ startc (void)
         // si points to the descriptor structure.
         registers.eax = 0xE8280;
         registers.es = 0x00;
-        registers.si = &descriptor;
+        registers.esi = (uint32_t) &descriptor;
         registers.ecx = sizeof (descriptor);
         registers.edx = 0x534D4150;
 
@@ -51,7 +53,7 @@ startc (void)
 
         // check the register states after the call to make sure that no
         // errors occurred.
-        if ((registers.eflags & EFLAG_CARRY) || 
+        if ((registers.eflags & EFLAGS_CARRY) || 
           (registers.eax != 0x534D4150))
         {
             print_string ("Error reading memory.\n");
@@ -59,10 +61,73 @@ startc (void)
         }
 
         // now print out the details about the memory region.
-        print_descriptor (descriptor);
+        print_descriptor (&descriptor);
     }
     while (registers.ebx != 0);
+
+    print_footer ();
 }
 
+/**********************************************************/
+
+/**
+ *  Print the contents of a given memory descriptor, forming a single row
+ *  of a table of memory region information displayed on the screen.
+ */
+    PRIVATE void
+print_descriptor (descriptor)
+    struct memory_region *descriptor;
+{
+    print_int_hex (descriptor->base_hi);
+    print_string (" : ");
+    print_int_hex (descriptor->base_low);
+    print_string (" | ");
+
+    print_int_hex (descriptor->length_hi);
+    print_string (" : ");
+    print_int_hex (descriptor->length_low);
+    print_string (" | ");
+
+    switch (descriptor->type)
+    {
+    case 1:
+        print_string ("Available memory.\n");
+        break;
+
+    case 2:
+        print_string ("Reserved memory.\n");
+        break;
+
+    default:
+        print_string ("Undefined memory block.\n");
+    }
+}
+
+/**********************************************************/
+
+/**
+ *  Prints the header for a table of memory information.
+ */
+    PRIVATE void
+print_header (void)
+{
+    print_string ("System memory:\n\n");
+    print_string ("Base Address (high:low) | Length (high:low)       "
+      "| Type\n");
+    print_string ("===================================================\n");
+}
+
+/**********************************************************/
+
+/**
+ *  Prints the bottom border for the table of memory information.
+ */
+    PRIVATE void
+print_footer (void)
+{
+    print_string ("===================================================\n");
+}
+
+/**********************************************************/
 
 /** vim: set ts=4 sw=4 et : */

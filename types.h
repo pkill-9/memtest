@@ -6,6 +6,17 @@
 #ifndef _MEMTEST_TYPES_H
 #define _MEMTEST_TYPES_H
 
+#include <stdint.h>
+
+/**********************************************************/
+
+/**
+ *  These constants define the purpose of the different bits in the x86
+ *  EFLAGS register. Each constant is a bitmask to select the bit of
+ *  interest.
+ */
+#define EFLAGS_CARRY    0x00000000  /** carry flag */
+
 /**********************************************************/
 
 /**
