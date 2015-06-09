@@ -9,12 +9,13 @@
  */
 
 #include "output.h"
+#include "types.h"
 #include "bios.h"
 #include "utils.h"
 
 /**********************************************************/
 
-PRIVATE void putchar (char c);
+PRIVATE void bios_putchar (char c);
 
 /**********************************************************/
 
@@ -29,6 +30,7 @@ print_int_hex (value)
     const char *alphabet = "0123456789ABCDEF";
     uint32_t mask;
     int nibble_index = 32 - 4;
+    int nibble;
 
     print_string ("0x");
 
@@ -37,7 +39,7 @@ print_int_hex (value)
         // mask out the next 4 bit part of the int, starting with the
         // most significant part.
         nibble = (value & mask) >> nibble_index;
-        putchar (alphabet [nibble]);
+        bios_putchar (alphabet [nibble]);
 
         nibble_index -= 4;
     }
@@ -54,7 +56,7 @@ print_string (string)
     const char *string;         // string to be printed.
 {
     while (*string != '\0')
-        putchar (*string ++);
+        bios_putchar (*string ++);
 }
 
 /**********************************************************/
@@ -63,14 +65,14 @@ print_string (string)
  *  Invoke the BIOS to print a single character on the screen.
  */
     PRIVATE void
-putchar (c)
+bios_putchar (c)
     char c;             // character to be printed.
 {
     struct cpu_registers registers;
 
     // turn any newline char into a carriage return line feed pair.
     if (c == '\n')
-        putchar ('\r');
+        bios_putchar ('\r');
 
     registers.eax = (0x0E << 8) | (c & 0x00FF);
     registers.ebx = 0;
