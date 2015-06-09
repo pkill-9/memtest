@@ -17,6 +17,10 @@
 #include <stdlib.h>
 #include <err.h>
 
+#include "utils.h"
+
+#define BYTES_PER_SECTOR        512
+
 /**********************************************************/
 
 PRIVATE void print_usage (void);
@@ -63,6 +67,30 @@ main (argc, argv)
     close_files ();
 
     return 0;
+}
+
+/**********************************************************/
+
+/**
+ *  Calculate the number of sectors that the memtest program takes up on
+ *  the disk image, and write that value into the bootsector, immediately
+ *  before the boot signature.
+ */
+    PRIVATE void
+write_sector_count (bytes_copied)
+    int bytes_copied;           // number of bytes in the memtest program
+{
+    int numsectors = bytes_copied / BYTES_PER_SECTOR;
+
+    // check if the program runs onto a part sector.
+    if (bytes_copied % BYTES_PER_SECTOR != 0)
+        numsectors ++;
+
+    // seek the disk image to the correct offset in the bootsector. The
+    // boot signature is two bytes at 510 and 511, so we want to seek to
+    // offset 509.
+    fseek (disk_fd, 512 - 3, SEEK_SET);
+    fputc (numsectors, disk_fd);
 }
 
 /**********************************************************/

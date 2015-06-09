@@ -5,7 +5,7 @@ AS = as
 CFLAGS = -Wall -O0 -g
 
 
-all:		
+all:		install-memtest
 
 %.o:		%.s
 	$(AS) $< -o $@
