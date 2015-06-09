@@ -17,7 +17,6 @@
 
 void print_string (const char *string);
 void print_int_hex (uint32_t value);
-void print_long_hex (uint32_t lsb, uint32_t msb);
 
 /**********************************************************/
 
