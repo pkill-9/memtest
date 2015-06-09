@@ -74,6 +74,10 @@ bios_putchar (c)
     if (c == '\n')
         bios_putchar ('\r');
 
+    // print a character using BIOS interrupt 0x10. To do this, the ax
+    // register must contain the opcode 0x0E in the high byte, and the
+    // character to print in the low byte. bx register contains either
+    // the attribute (colour) or page number in text mode.
     registers.eax = (0x0E << 8) | (c & 0x00FF);
     registers.ebx = 0;
 
