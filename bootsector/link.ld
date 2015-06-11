@@ -16,7 +16,11 @@ SECTIONS
         *(.data);
         *(.rodata*);
         *(COMMON);
-        NUMSECTORS = 0x7DFD;
+    }
+
+    .params 0x7DFD :
+    {
+        *(.params);
     }
 
     .signature 0x7DFE :
