@@ -1,4 +1,4 @@
-ENTRY("_startc");
+ENTRY("_start");
 OUTPUT_FORMAT("binary")
 SECTIONS
 {
@@ -17,6 +17,11 @@ SECTIONS
         *(.rodata*);
         *(COMMON);
         NUMSECTORS = 0x7DFD;
+    }
+
+    .signature 0x7DFE :
+    {
+        SHORT(0xAA55);
     }
 
     /DISCARD/ :
