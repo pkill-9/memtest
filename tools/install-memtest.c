@@ -138,6 +138,7 @@ void print_usage (void)
       "install-memtest <memtest> <disk>\n\n"
       "Where memtest is the path to the program file to be copied onto\n"
       "the disk and disk is the path to the disk image file.\n");
+    exit (1);
 }
 
 /**********************************************************/
