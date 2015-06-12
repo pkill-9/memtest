@@ -20,7 +20,7 @@ clean:
 	rm -f $(OBJS)
 
 scrub:		clean
-	rm -f memtest.bin cscope.out
+	rm -f memtest.bin cscope.out depend
 
 tags:
 	cscope -b
