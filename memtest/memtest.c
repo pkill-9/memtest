@@ -10,11 +10,15 @@
 #include "output.h"
 #include "utils.h"
 
+/** set the maximum size of the list of memory regions to a large number,
+ *  that is unlikely to be exceeded. */
+#define MAX_DESCRIPTORS     100
+
 /**********************************************************/
 
 PRIVATE void print_descriptor (struct memory_region *descriptor);
 PRIVATE void print_header (void);
-PRIVATE void print_footer (void);
+PRIVATE void print_separator (void);
 
 /**********************************************************/
 
@@ -25,47 +29,19 @@ PRIVATE void print_footer (void);
     PUBLIC void
 startc (void)
 {
-    // this allows us to set the values of specific registers for a BIOS
-    // call.
-    struct cpu_registers registers;
+    struct memory_region descriptors [MAX_DESCRIPTORS];
+    int numdescriptors, i;
 
-    // Each contiguous region of memory is described by several fields, a
-    // base address, length, and what type of memory it is.
-    struct memory_region descriptor;
-    
-    // print table header, and make sure the ebx register is zero for the
-    // first BIOS call.
+    print_string ("It works.\n");
+    numdescriptors = fetch_memory_list (descriptors);
+
     print_header ();
-    registers.ebx = 0;
 
-    do
-    {
-        // set up the registers for the BIOS call. eax contains an opcode,
-        // si points to the descriptor structure.
-        registers.eax = 0xE8280;
-        registers.es = 0x00;
-        registers.esi = (uint32_t) &descriptor;
-        registers.ecx = sizeof (descriptor);
-        registers.edx = 0x534D4150;
+    for (i = 0; i < numdescriptors; i ++)
+        print_descriptor (descriptors + i);
 
-        // invoke the BIOS to get the next memory descriptor.
-        bios_interrupt (&registers, 0x15);
+    print_separator ();
 
-        // check the register states after the call to make sure that no
-        // errors occurred.
-        if ((registers.eflags & EFLAGS_CARRY) || 
-          (registers.eax != 0x534D4150))
-        {
-            print_string ("Error reading memory.\n");
-            break;
-        }
-
-        // now print out the details about the memory region.
-        print_descriptor (&descriptor);
-    }
-    while (registers.ebx != 0);
-
-    print_footer ();
     idle ();
 }
 
@@ -115,7 +91,7 @@ print_header (void)
     print_string ("System memory:\n\n");
     print_string ("Base Address (high:low) | Length (high:low)       "
       "| Type\n");
-    print_string ("===================================================\n");
+    print_separator ();
 }
 
 /**********************************************************/
@@ -124,9 +100,10 @@ print_header (void)
  *  Prints the bottom border for the table of memory information.
  */
     PRIVATE void
-print_footer (void)
+print_separator (void)
 {
-    print_string ("===================================================\n");
+    print_string ("==================================================="
+      "====================\n");
 }
 
 /**********************************************************/

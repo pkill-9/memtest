@@ -15,7 +15,7 @@
 
 /**********************************************************/
 
-PRIVATE void bios_putchar (char c);
+PRIVATE void print_char (char c);
 
 /**********************************************************/
 
@@ -39,7 +39,7 @@ print_int_hex (value)
         // mask out the next 4 bit part of the int, starting with the
         // most significant part.
         nibble = (value & mask) >> nibble_index;
-        bios_putchar (alphabet [nibble]);
+        print_char (alphabet [nibble]);
 
         nibble_index -= 4;
     }
@@ -56,7 +56,7 @@ print_string (string)
     const char *string;         // string to be printed.
 {
     while (*string != '\0')
-        bios_putchar (*string ++);
+        print_char (*string ++);
 }
 
 /**********************************************************/
@@ -65,23 +65,14 @@ print_string (string)
  *  Invoke the BIOS to print a single character on the screen.
  */
     PRIVATE void
-bios_putchar (c)
+print_char (c)
     char c;             // character to be printed.
 {
-    struct cpu_registers registers;
-
     // turn any newline char into a carriage return line feed pair.
     if (c == '\n')
         bios_putchar ('\r');
 
-    // print a character using BIOS interrupt 0x10. To do this, the ax
-    // register must contain the opcode 0x0E in the high byte, and the
-    // character to print in the low byte. bx register contains either
-    // the attribute (colour) or page number in text mode.
-    registers.eax = (0x0E << 8) | (c & 0x00FF);
-    registers.ebx = 0;
-
-    bios_interrupt (&registers, 0x10);
+    bios_putchar (c);
 }
 
 /**********************************************************/
