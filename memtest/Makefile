@@ -22,7 +22,10 @@ clean:
 scrub:		clean
 	rm -f memtest.bin
 
-.PHONY:		clean scrub all
+tags:
+	cscope -b
+
+.PHONY:		clean scrub tags all
 
 include depend
 
