@@ -64,6 +64,7 @@ struct memory_region
     uint32_t length_low;
     uint32_t length_hi;
     uint32_t type;
+    uint32_t unused;
 };
 
 /**********************************************************/
