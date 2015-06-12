@@ -7,7 +7,7 @@
 
 #include "types.h"
 
-void bios_interrupt (struct cpu_registers *registers, int interrupt);
+void bios_putchar (uint8_t ch);
 void idle (void);
 
 #endif
