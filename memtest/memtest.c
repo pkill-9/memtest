@@ -66,6 +66,7 @@ startc (void)
     while (registers.ebx != 0);
 
     print_footer ();
+    idle ();
 }
 
 /**********************************************************/

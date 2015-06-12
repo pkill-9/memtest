@@ -7,6 +7,8 @@
 
 .section .text
 
+/**********************************************************/
+
 /**
  *  bios_interrupt (struct cpu_registers *r, int code)
  *
@@ -87,5 +89,24 @@ restore:
     mov     %ebp, %esp
     popl    %ebp
     ret
+
+/**********************************************************/
+
+/**
+ *  void idle (void)
+ *
+ *  put the CPU in a low power state once the memtest program has 
+ *  finished. This also avoids the CPU going into junk memory after the
+ *  end of the main function.
+ *
+ *  This function will never return.
+ */
+    .globl _idle
+_idle:
+    cli
+    hlt
+    jmp     _idle           # just in case.
+
+/**********************************************************/
 
 # vim: ts=4 sw=4 et
