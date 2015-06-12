@@ -20,7 +20,7 @@ clean:
 	rm -f $(OBJS)
 
 scrub:		clean
-	rm -f 
+	rm -f install-memtest
 
 .PHONY:		clean scrub all
 
