@@ -14,7 +14,6 @@ install:	disk.hdd $(SUBDIRS)
 	./tools/install-memtest memtest/memtest.bin disk.hdd
 
 clean:		$(SUBDIRS)
-	rm -f $(OBJS)
 
 scrub:		clean $(SUBDIRS)
 	rm -f disk.hdd
